@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+
+<body>
+
+    <form action="" name="form1" onsubmit="sendData(event)">
+        <input type="text" name="email" id="" placeholder="電子郵件">
+        <br>
+        <input type="text" name="password" id="" placeholder="密碼">
+        <br>
+        <input type="submit" value="登入">
+    </form>
+
+    <script>
+        function sendData(e) {
+            e.preventDefault()
+
+            fetch(`/login`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    email: document.form1.email.value,
+                    password: document.form1.password.value,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(r => r.json())
+                // .then(r=>r.text())
+                .then((data) => {
+                    console.log(data)
+                    if (data.success) {               // 如果登入成功
+                        const obj = data.data       // 解開真正的data
+                        // 再把data放到localStorage當作react的contextProvider
+                        localStorage.setItem('auth', JSON.stringify(obj))
+                        window.alert('登入成功')
+                    } else {
+                        alert(data.error || '帳號或密碼錯誤')
+                    }
+
+                })
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>get-item</title>
+</head>
+
+<body>
+    <button onclick="getData(event)">取得資料</button>
+    <pre id="info"></pre>
+
+    <script>
+        let auth = {}
+        const authStr = localStorage.getItem('auth')    // 拿到auth裡面的value
+        if (authStr) {
+            try {
+                auth = JSON.parse(authStr)
+                // 因為localStorage存的是字串，所以要JSON.Parse
+            } catch (ex) { console.log(ex) }
+        }
+
+        function getData(e) {
+            fetch('/ab/api/verify/100', {
+                headers: {
+                    'Authorization': 'Bearer ' + auth.token
+                }
+            })
+                .then(r => r.json())
+                .then((data) => {
+                    info.innerHTML = JSON.stringify(data, null, 4)
+                })
+        }
+    </script>
+
+</body>
+
+</html>
